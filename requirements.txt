@@ -1,0 +1,12 @@
+# Gravity Flip Runner - Python Dependencies
+
+# Core game engine
+pygame>=2.5.0
+
+# Development dependencies (testing)
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+
+# Optional: Environment variable support
+python-dotenv>=1.0.0
