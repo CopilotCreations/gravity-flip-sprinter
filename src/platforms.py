@@ -48,15 +48,29 @@ class Platform:
         
     @property
     def rect(self) -> pygame.Rect:
-        """Get the platform's collision rectangle."""
+        """Get the platform's collision rectangle.
+
+        Returns:
+            pygame.Rect: The platform's bounding rectangle for collision detection.
+        """
         return pygame.Rect(int(self.x), int(self.y), self.width, self.height)
     
     def update(self) -> None:
-        """Update platform state (no-op for static platforms)."""
+        """Update platform state.
+
+        No-op for static platforms. Subclasses override this for dynamic behavior.
+        """
         pass
     
     def get_render_rect(self, camera_x: float = 0) -> pygame.Rect:
-        """Get rectangle adjusted for camera position."""
+        """Get rectangle adjusted for camera position.
+
+        Args:
+            camera_x: The camera's horizontal offset for scrolling.
+
+        Returns:
+            pygame.Rect: The platform's rectangle in screen coordinates.
+        """
         return pygame.Rect(
             int(self.x - camera_x),
             int(self.y),
@@ -113,7 +127,11 @@ class MovingPlatform(Platform):
         self.direction = 1  # 1 = toward end, -1 = toward start
         
     def update(self) -> None:
-        """Update platform position."""
+        """Update platform position.
+
+        Moves the platform along its path between start and end points,
+        reversing direction when reaching either endpoint.
+        """
         self.progress += self.speed * self.direction * 0.01
         
         # Reverse direction at endpoints
@@ -129,7 +147,11 @@ class MovingPlatform(Platform):
         self.y = self.start_y + (self.end_y - self.start_y) * self.progress
     
     def get_velocity(self) -> Tuple[float, float]:
-        """Get current velocity for player riding."""
+        """Get current velocity for player riding.
+
+        Returns:
+            Tuple[float, float]: The (dx, dy) velocity vector of the platform.
+        """
         dx = (self.end_x - self.start_x) * self.speed * self.direction * 0.01
         dy = (self.end_y - self.start_y) * self.speed * self.direction * 0.01
         return dx, dy
@@ -150,7 +172,16 @@ class GravityPlatform(Platform):
         color: Optional[Tuple[int, int, int]] = None,
         config: Optional[GameConfig] = None
     ):
-        """Initialize a gravity-affected platform."""
+        """Initialize a gravity-affected platform.
+
+        Args:
+            x: X position.
+            y: Y position.
+            width: Platform width.
+            height: Platform height.
+            color: RGB color tuple (uses config default if not provided).
+            config: Game configuration.
+        """
         super().__init__(x, y, width, height, color, config)
         self.dy = 0.0
         self.gravity_direction = 1
@@ -158,19 +189,29 @@ class GravityPlatform(Platform):
         self.original_y = y
         
     def set_gravity(self, direction: int) -> None:
-        """Set gravity direction."""
+        """Set gravity direction.
+
+        Args:
+            direction: The gravity direction (1 for down, -1 for up).
+        """
         if direction != self.gravity_direction:
             self.gravity_direction = direction
             self.is_falling = True
     
     def update(self) -> None:
-        """Update platform if falling."""
+        """Update platform if falling.
+
+        Applies gravity acceleration and updates the platform's vertical position.
+        """
         if self.is_falling:
             self.dy += self.config.gravity_strength * self.gravity_direction * 0.5
             self.y += self.dy
     
     def reset(self) -> None:
-        """Reset platform to original position."""
+        """Reset platform to original position.
+
+        Restores the platform's Y position, velocity, and gravity state.
+        """
         self.y = self.original_y
         self.dy = 0
         self.is_falling = False

@@ -12,7 +12,11 @@ class TestEnemy:
     """Tests for Enemy class."""
     
     def test_initialization(self, config):
-        """Test enemy initialization."""
+        """Test enemy initialization with custom parameters.
+
+        Args:
+            config: Game configuration fixture.
+        """
         enemy = Enemy(100, 200, patrol_distance=80, speed=3.0, config=config)
         
         assert enemy.x == 100
@@ -24,30 +28,50 @@ class TestEnemy:
         assert enemy.gravity_direction == 1
     
     def test_default_dimensions(self, enemy):
-        """Test enemy has default dimensions."""
+        """Test enemy has default dimensions.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         assert enemy.width == 32
         assert enemy.height == 32
     
     def test_custom_dimensions(self, config):
-        """Test enemy with custom dimensions."""
+        """Test enemy with custom dimensions.
+
+        Args:
+            config: Game configuration fixture.
+        """
         enemy = Enemy(0, 0, width=64, height=48, config=config)
         
         assert enemy.width == 64
         assert enemy.height == 48
     
     def test_default_color(self, enemy):
-        """Test enemy uses default color from config."""
+        """Test enemy uses default color from config.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         assert enemy.color == enemy.config.enemy_color
     
     def test_custom_color(self, config):
-        """Test enemy with custom color."""
+        """Test enemy with custom color.
+
+        Args:
+            config: Game configuration fixture.
+        """
         custom_color = (0, 255, 0)
         enemy = Enemy(0, 0, color=custom_color, config=config)
         
         assert enemy.color == custom_color
     
     def test_rect_property(self, enemy):
-        """Test rect property returns correct pygame.Rect."""
+        """Test rect property returns correct pygame.Rect.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         rect = enemy.rect
         
         assert rect.x == 200
@@ -56,21 +80,33 @@ class TestEnemy:
         assert rect.height == 32
     
     def test_set_gravity(self, enemy):
-        """Test setting gravity direction."""
+        """Test setting gravity direction.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.set_gravity(-1)
         
         assert enemy.gravity_direction == -1
         assert enemy.on_ground is False
     
     def test_apply_gravity(self, enemy):
-        """Test gravity application."""
+        """Test gravity application increases downward velocity.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.dy = 0
         enemy.apply_gravity()
         
         assert enemy.dy > 0
     
     def test_apply_gravity_inverted(self, enemy):
-        """Test inverted gravity application."""
+        """Test inverted gravity application increases upward velocity.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.gravity_direction = -1
         enemy.dy = 0
         enemy.apply_gravity()
@@ -78,35 +114,56 @@ class TestEnemy:
         assert enemy.dy < 0
     
     def test_apply_gravity_clamped(self, enemy):
-        """Test gravity clamps at max fall speed."""
+        """Test gravity clamps at max fall speed.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.dy = enemy.config.max_fall_speed
         enemy.apply_gravity()
         
         assert enemy.dy == enemy.config.max_fall_speed
     
     def test_patrol_right(self, enemy):
-        """Test patrol movement to the right."""
+        """Test patrol movement to the right.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         initial_x = enemy.x
         enemy.update([])
         
         assert enemy.x > initial_x
     
     def test_patrol_reverses_at_end(self, enemy):
-        """Test patrol reverses at patrol distance."""
+        """Test patrol reverses direction at patrol distance.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.x = enemy.start_x + enemy.patrol_distance + 1
         enemy._patrol()
         
         assert enemy.direction == -1
     
     def test_patrol_reverses_at_start(self, enemy):
-        """Test patrol reverses at negative patrol distance."""
+        """Test patrol reverses direction at negative patrol distance.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         enemy.x = enemy.start_x - enemy.patrol_distance - 1
         enemy._patrol()
         
         assert enemy.direction == 1
     
     def test_collision_with_platform(self, enemy, config):
-        """Test enemy lands on platform."""
+        """Test enemy lands on platform.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+            config: Game configuration fixture.
+        """
         platform = Platform(150, 500, 200, 50, config=config)
         enemy.y = 460
         enemy.dy = 10
@@ -118,14 +175,22 @@ class TestEnemy:
         assert enemy.on_ground is True
     
     def test_get_render_rect_no_camera(self, enemy):
-        """Test render rect without camera offset."""
+        """Test render rect without camera offset.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         render_rect = enemy.get_render_rect(0)
         
         assert render_rect.x == enemy.x
         assert render_rect.y == enemy.y
     
     def test_get_render_rect_with_camera(self, enemy):
-        """Test render rect with camera offset."""
+        """Test render rect with camera offset.
+
+        Args:
+            enemy: Enemy fixture with default configuration.
+        """
         camera_x = 100
         render_rect = enemy.get_render_rect(camera_x)
         
@@ -137,7 +202,11 @@ class TestHazard:
     """Tests for Hazard class."""
     
     def test_initialization(self, config):
-        """Test hazard initialization."""
+        """Test hazard initialization with custom parameters.
+
+        Args:
+            config: Game configuration fixture.
+        """
         hazard = Hazard(100, 200, 50, 30, config=config)
         
         assert hazard.x == 100
@@ -146,18 +215,30 @@ class TestHazard:
         assert hazard.height == 30
     
     def test_default_color(self, hazard):
-        """Test hazard uses default color from config."""
+        """Test hazard uses default color from config.
+
+        Args:
+            hazard: Hazard fixture with default configuration.
+        """
         assert hazard.color == hazard.config.hazard_color
     
     def test_custom_color(self, config):
-        """Test hazard with custom color."""
+        """Test hazard with custom color.
+
+        Args:
+            config: Game configuration fixture.
+        """
         custom_color = (128, 0, 128)
         hazard = Hazard(0, 0, 50, 30, color=custom_color, config=config)
         
         assert hazard.color == custom_color
     
     def test_rect_property(self, hazard):
-        """Test rect property returns correct pygame.Rect."""
+        """Test rect property returns correct pygame.Rect.
+
+        Args:
+            hazard: Hazard fixture with default configuration.
+        """
         rect = hazard.rect
         
         assert rect.x == 300
@@ -166,14 +247,22 @@ class TestHazard:
         assert rect.height == 20
     
     def test_get_render_rect_no_camera(self, hazard):
-        """Test render rect without camera offset."""
+        """Test render rect without camera offset.
+
+        Args:
+            hazard: Hazard fixture with default configuration.
+        """
         render_rect = hazard.get_render_rect(0)
         
         assert render_rect.x == hazard.x
         assert render_rect.y == hazard.y
     
     def test_get_render_rect_with_camera(self, hazard):
-        """Test render rect with camera offset."""
+        """Test render rect with camera offset.
+
+        Args:
+            hazard: Hazard fixture with default configuration.
+        """
         camera_x = 150
         render_rect = hazard.get_render_rect(camera_x)
         

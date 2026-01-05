@@ -40,7 +40,24 @@ class GameConfig:
     
     @classmethod
     def from_env(cls) -> "GameConfig":
-        """Create configuration from environment variables."""
+        """Create configuration from environment variables.
+
+        Reads game configuration values from environment variables, falling back
+        to default values if not set.
+
+        Supported environment variables:
+            WINDOW_WIDTH: Window width in pixels (default: 800)
+            WINDOW_HEIGHT: Window height in pixels (default: 600)
+            FPS: Target frames per second (default: 60)
+            PLAYER_SPEED: Player movement speed (default: 5.0)
+            PLAYER_JUMP_FORCE: Player jump force (default: 15.0)
+            GRAVITY_STRENGTH: Gravity strength (default: 0.8)
+            DEBUG_MODE: Enable debug mode (default: false)
+            SHOW_HITBOXES: Show collision hitboxes (default: false)
+
+        Returns:
+            GameConfig: A new GameConfig instance with values from environment.
+        """
         return cls(
             window_width=int(os.getenv("WINDOW_WIDTH", 800)),
             window_height=int(os.getenv("WINDOW_HEIGHT", 600)),

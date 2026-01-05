@@ -23,7 +23,11 @@ class Level:
     """
     
     def __init__(self, config: Optional[GameConfig] = None):
-        """Initialize an empty level."""
+        """Initialize an empty level.
+        
+        Args:
+            config: Game configuration settings. Uses default_config if None.
+        """
         self.config = config or default_config
         
         self.platforms: List[Platform] = []
@@ -37,15 +41,27 @@ class Level:
         self.camera_x = 0.0
         
     def add_platform(self, platform: Platform) -> None:
-        """Add a platform to the level."""
+        """Add a platform to the level.
+        
+        Args:
+            platform: The platform object to add.
+        """
         self.platforms.append(platform)
         
     def add_enemy(self, enemy: Enemy) -> None:
-        """Add an enemy to the level."""
+        """Add an enemy to the level.
+        
+        Args:
+            enemy: The enemy object to add.
+        """
         self.enemies.append(enemy)
         
     def add_hazard(self, hazard: Hazard) -> None:
-        """Add a hazard to the level."""
+        """Add a hazard to the level.
+        
+        Args:
+            hazard: The hazard object to add.
+        """
         self.hazards.append(hazard)
     
     def update(self, player_x: float) -> None:
@@ -85,7 +101,11 @@ class Level:
                 platform.set_gravity(direction)
     
     def reset(self) -> None:
-        """Reset all level objects to initial state."""
+        """Reset all level objects to initial state.
+        
+        Resets camera position to 0 and resets all gravity platforms.
+        Note: Enemies would need spawn position tracking for full reset.
+        """
         self.camera_x = 0
         
         for platform in self.platforms:
@@ -100,7 +120,16 @@ class Level:
         player_y: float,
         player_height: int
     ) -> bool:
-        """Check if player has fallen out of level bounds."""
+        """Check if player has fallen out of level bounds.
+        
+        Args:
+            player_x: Player's current x position.
+            player_y: Player's current y position.
+            player_height: Height of the player sprite.
+            
+        Returns:
+            True if player is outside vertical bounds, False otherwise.
+        """
         min_x, max_x, min_y, max_y = self.level_bounds
         return (
             player_y > max_y + player_height or
@@ -113,11 +142,16 @@ class LevelLoader:
     
     @staticmethod
     def create_demo_level(config: Optional[GameConfig] = None) -> Level:
-        """
-        Create a demo level for testing.
+        """Create a demo level for testing.
         
+        Creates a sample level with ground platforms, ceiling platforms,
+        floating platforms, moving platforms, enemies, and hazards.
+        
+        Args:
+            config: Game configuration settings. Uses default_config if None.
+            
         Returns:
-            A Level object with sample content
+            A Level object with sample content.
         """
         config = config or default_config
         level = Level(config)
@@ -172,15 +206,21 @@ class LevelLoader:
     
     @staticmethod
     def load_from_json(filepath: str, config: Optional[GameConfig] = None) -> Level:
-        """
-        Load a level from a JSON file.
+        """Load a level from a JSON file.
+        
+        Parses a JSON file containing level data including bounds, spawn point,
+        platforms (static, moving, gravity), enemies, and hazards.
         
         Args:
-            filepath: Path to the JSON level file
-            config: Game configuration
+            filepath: Path to the JSON level file.
+            config: Game configuration settings. Uses default_config if None.
             
         Returns:
-            A Level object loaded from the file
+            A Level object loaded from the file.
+            
+        Raises:
+            FileNotFoundError: If the specified file does not exist.
+            json.JSONDecodeError: If the file contains invalid JSON.
         """
         config = config or default_config
         
@@ -240,12 +280,17 @@ class LevelLoader:
     
     @staticmethod
     def save_to_json(level: Level, filepath: str) -> None:
-        """
-        Save a level to a JSON file.
+        """Save a level to a JSON file.
+        
+        Serializes the level data including bounds, spawn point, platforms,
+        enemies, and hazards to a JSON file with pretty-printed formatting.
         
         Args:
-            level: The Level object to save
-            filepath: Output file path
+            level: The Level object to save.
+            filepath: Output file path for the JSON file.
+            
+        Raises:
+            IOError: If the file cannot be written.
         """
         data: Dict[str, Any] = {
             'bounds': list(level.level_bounds),

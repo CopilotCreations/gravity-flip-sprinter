@@ -44,7 +44,11 @@ class Renderer:
         ]
         
     def clear(self) -> None:
-        """Clear the screen with background color."""
+        """Clear the screen with background color.
+
+        Fills the entire screen surface with the configured background color,
+        preparing it for the next frame's rendering.
+        """
         self.screen.fill(self.config.background_color)
     
     def draw_background(self, camera_x: float = 0) -> None:
@@ -307,7 +311,11 @@ class Renderer:
                 self.screen.blit(text, (10, self.config.window_height - 80 + i * 20))
     
     def draw_game_over(self) -> None:
-        """Draw game over screen."""
+        """Draw the game over screen.
+
+        Renders a semi-transparent overlay with "GAME OVER" text and
+        a restart prompt centered on the screen.
+        """
         # Dim overlay
         overlay = pygame.Surface((self.config.window_width, self.config.window_height))
         overlay.fill((0, 0, 0))
@@ -333,7 +341,11 @@ class Renderer:
         self.screen.blit(restart_text, restart_rect)
     
     def draw_pause(self) -> None:
-        """Draw pause overlay."""
+        """Draw the pause overlay.
+
+        Renders a semi-transparent overlay with "PAUSED" text centered
+        on the screen to indicate the game is paused.
+        """
         # Dim overlay
         overlay = pygame.Surface((self.config.window_width, self.config.window_height))
         overlay.fill((0, 0, 0))

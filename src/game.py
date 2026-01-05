@@ -69,7 +69,11 @@ class Game:
         self._init_game_objects()
     
     def _init_game_objects(self) -> None:
-        """Initialize or reset game objects."""
+        """Initialize or reset game objects.
+        
+        Creates the level, player, renderer, and input handler instances.
+        Called during initialization and when restarting the game.
+        """
         # Load level
         self.level = LevelLoader.create_demo_level(self.config)
         
@@ -84,7 +88,11 @@ class Game:
         self.input_handler = InputHandler()
     
     def handle_events(self) -> None:
-        """Process pygame events."""
+        """Process pygame events.
+        
+        Handles quit events, debug toggles, pause toggling, and restart requests.
+        Updates the running and state attributes based on user input.
+        """
         events = pygame.event.get()
         
         for event in events:
@@ -114,7 +122,11 @@ class Game:
             self.restart()
     
     def handle_player_input(self) -> None:
-        """Process player-specific input."""
+        """Process player-specific input.
+        
+        Handles movement, jumping, and gravity flipping based on user input.
+        Only processes input when the game state is RUNNING.
+        """
         if self.state != GameState.RUNNING:
             return
         
@@ -132,7 +144,11 @@ class Game:
             self.level.set_gravity_for_all(self.player.gravity_direction)
     
     def update(self) -> None:
-        """Update game state."""
+        """Update game state.
+        
+        Updates player position, level state, checks collisions, and updates score.
+        Only runs when the game state is RUNNING.
+        """
         if self.state != GameState.RUNNING:
             return
         
@@ -149,7 +165,11 @@ class Game:
         self.score = max(self.score, int(self.player.x / 10))
     
     def _check_collisions(self) -> None:
-        """Check for player collisions with hazards and enemies."""
+        """Check for player collisions with hazards and enemies.
+        
+        Checks collision with enemies, hazards, and level bounds.
+        Calls _player_hit() if any collision is detected.
+        """
         # Check enemy collision
         if self.player.check_enemy_collision(self.level.enemies):
             self._player_hit()
@@ -167,7 +187,11 @@ class Game:
             self._player_hit()
     
     def _player_hit(self) -> None:
-        """Handle player getting hit."""
+        """Handle player getting hit.
+        
+        Decrements lives and either triggers game over or resets player position.
+        Sets state to GAME_OVER if no lives remain.
+        """
         self.lives -= 1
         
         if self.lives <= 0:
@@ -177,7 +201,11 @@ class Game:
             self.level.reset()
     
     def render(self) -> None:
-        """Render the game."""
+        """Render the game.
+        
+        Clears the screen, draws level, player, UI, and state-specific overlays.
+        Updates the display after all drawing is complete.
+        """
         # Clear screen
         self.renderer.clear()
         
@@ -200,14 +228,22 @@ class Game:
         pygame.display.flip()
     
     def restart(self) -> None:
-        """Restart the game."""
+        """Restart the game.
+        
+        Resets lives to 3, score to 0, state to RUNNING, and reinitializes
+        all game objects to their initial state.
+        """
         self.lives = 3
         self.score = 0
         self.state = GameState.RUNNING
         self._init_game_objects()
     
     def run(self) -> None:
-        """Main game loop."""
+        """Run the main game loop.
+        
+        Continuously handles events, processes input, updates state, and renders
+        until the running flag is set to False. Cleans up pygame on exit.
+        """
         while self.running:
             # Handle events
             self.handle_events()
@@ -232,7 +268,11 @@ class Game:
 
 
 def main():
-    """Entry point for the game."""
+    """Entry point for the game.
+    
+    Creates a Game instance with configuration from environment variables
+    and starts the main game loop.
+    """
     config = GameConfig.from_env()
     game = Game(config)
     game.run()

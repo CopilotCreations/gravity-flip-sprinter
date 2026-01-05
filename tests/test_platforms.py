@@ -11,7 +11,11 @@ class TestPlatform:
     """Tests for Platform class."""
     
     def test_initialization(self, config):
-        """Test platform initialization."""
+        """Test platform initialization.
+
+        Args:
+            config: Game configuration fixture.
+        """
         platform = Platform(100, 200, 150, 50, config=config)
         
         assert platform.x == 100
@@ -20,20 +24,32 @@ class TestPlatform:
         assert platform.height == 50
     
     def test_default_color(self, config):
-        """Test platform uses default color from config."""
+        """Test platform uses default color from config.
+
+        Args:
+            config: Game configuration fixture.
+        """
         platform = Platform(0, 0, 100, 50, config=config)
         
         assert platform.color == config.platform_color
     
     def test_custom_color(self, config):
-        """Test platform with custom color."""
+        """Test platform with custom color.
+
+        Args:
+            config: Game configuration fixture.
+        """
         custom_color = (255, 0, 0)
         platform = Platform(0, 0, 100, 50, color=custom_color, config=config)
         
         assert platform.color == custom_color
     
     def test_rect_property(self, platform):
-        """Test rect property returns correct pygame.Rect."""
+        """Test rect property returns correct pygame.Rect.
+
+        Args:
+            platform: Platform fixture.
+        """
         rect = platform.rect
         
         assert rect.x == 0
@@ -42,7 +58,11 @@ class TestPlatform:
         assert rect.height == 50
     
     def test_update_does_nothing(self, platform):
-        """Test update on static platform does nothing."""
+        """Test update on static platform does nothing.
+
+        Args:
+            platform: Platform fixture.
+        """
         original_x = platform.x
         original_y = platform.y
         
@@ -52,14 +72,22 @@ class TestPlatform:
         assert platform.y == original_y
     
     def test_get_render_rect_no_camera(self, platform):
-        """Test render rect without camera offset."""
+        """Test render rect without camera offset.
+
+        Args:
+            platform: Platform fixture.
+        """
         render_rect = platform.get_render_rect(0)
         
         assert render_rect.x == platform.x
         assert render_rect.y == platform.y
     
     def test_get_render_rect_with_camera(self, platform):
-        """Test render rect with camera offset."""
+        """Test render rect with camera offset.
+
+        Args:
+            platform: Platform fixture.
+        """
         camera_x = 50
         render_rect = platform.get_render_rect(camera_x)
         
@@ -71,7 +99,11 @@ class TestMovingPlatform:
     """Tests for MovingPlatform class."""
     
     def test_initialization(self, config):
-        """Test moving platform initialization."""
+        """Test moving platform initialization.
+
+        Args:
+            config: Game configuration fixture.
+        """
         platform = MovingPlatform(0, 300, 100, 25, end_x=200, end_y=300, speed=2.0, config=config)
         
         assert platform.x == 0
@@ -85,7 +117,11 @@ class TestMovingPlatform:
         assert platform.direction == 1
     
     def test_update_moves_platform(self, moving_platform):
-        """Test update moves platform toward end point."""
+        """Test update moves platform toward end point.
+
+        Args:
+            moving_platform: MovingPlatform fixture.
+        """
         initial_x = moving_platform.x
         
         moving_platform.update()
@@ -93,7 +129,11 @@ class TestMovingPlatform:
         assert moving_platform.x > initial_x
     
     def test_update_reverses_at_end(self, moving_platform):
-        """Test platform reverses direction at end point."""
+        """Test platform reverses direction at end point.
+
+        Args:
+            moving_platform: MovingPlatform fixture.
+        """
         # Move to end
         moving_platform.progress = 1.0
         moving_platform.update()
@@ -101,7 +141,11 @@ class TestMovingPlatform:
         assert moving_platform.direction == -1
     
     def test_update_reverses_at_start(self, moving_platform):
-        """Test platform reverses direction at start point."""
+        """Test platform reverses direction at start point.
+
+        Args:
+            moving_platform: MovingPlatform fixture.
+        """
         moving_platform.progress = 0.01
         moving_platform.direction = -1
         
@@ -110,7 +154,11 @@ class TestMovingPlatform:
         assert moving_platform.direction == 1
     
     def test_get_velocity(self, moving_platform):
-        """Test get_velocity returns correct velocity."""
+        """Test get_velocity returns correct velocity.
+
+        Args:
+            moving_platform: MovingPlatform fixture.
+        """
         dx, dy = moving_platform.get_velocity()
         
         # Moving horizontally, so dx should be non-zero
@@ -118,7 +166,11 @@ class TestMovingPlatform:
         assert dy == 0  # Not moving vertically in this case
     
     def test_vertical_movement(self, config):
-        """Test vertically moving platform."""
+        """Test vertically moving platform.
+
+        Args:
+            config: Game configuration fixture.
+        """
         platform = MovingPlatform(100, 100, 100, 25, end_x=100, end_y=300, speed=2.0, config=config)
         
         initial_y = platform.y
@@ -132,7 +184,11 @@ class TestGravityPlatform:
     """Tests for GravityPlatform class."""
     
     def test_initialization(self, config):
-        """Test gravity platform initialization."""
+        """Test gravity platform initialization.
+
+        Args:
+            config: Game configuration fixture.
+        """
         platform = GravityPlatform(100, 200, 100, 25, config=config)
         
         assert platform.x == 100
@@ -143,20 +199,32 @@ class TestGravityPlatform:
         assert platform.is_falling is False
     
     def test_set_gravity_triggers_fall(self, gravity_platform):
-        """Test setting gravity triggers falling."""
+        """Test setting gravity triggers falling.
+
+        Args:
+            gravity_platform: GravityPlatform fixture.
+        """
         gravity_platform.set_gravity(-1)
         
         assert gravity_platform.gravity_direction == -1
         assert gravity_platform.is_falling is True
     
     def test_set_gravity_same_direction(self, gravity_platform):
-        """Test setting same gravity direction doesn't trigger fall."""
+        """Test setting same gravity direction doesn't trigger fall.
+
+        Args:
+            gravity_platform: GravityPlatform fixture.
+        """
         gravity_platform.set_gravity(1)
         
         assert gravity_platform.is_falling is False
     
     def test_update_when_falling(self, gravity_platform):
-        """Test update applies gravity when falling."""
+        """Test update applies gravity when falling.
+
+        Args:
+            gravity_platform: GravityPlatform fixture.
+        """
         gravity_platform.is_falling = True
         initial_y = gravity_platform.y
         
@@ -166,7 +234,11 @@ class TestGravityPlatform:
         assert gravity_platform.dy != 0
     
     def test_update_when_not_falling(self, gravity_platform):
-        """Test update does nothing when not falling."""
+        """Test update does nothing when not falling.
+
+        Args:
+            gravity_platform: GravityPlatform fixture.
+        """
         initial_y = gravity_platform.y
         
         gravity_platform.update()
@@ -174,7 +246,11 @@ class TestGravityPlatform:
         assert gravity_platform.y == initial_y
     
     def test_reset(self, gravity_platform):
-        """Test reset returns platform to original state."""
+        """Test reset returns platform to original state.
+
+        Args:
+            gravity_platform: GravityPlatform fixture.
+        """
         gravity_platform.y = 500
         gravity_platform.dy = 10
         gravity_platform.is_falling = True

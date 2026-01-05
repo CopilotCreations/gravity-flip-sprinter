@@ -65,16 +65,28 @@ class Enemy:
         
     @property
     def rect(self) -> pygame.Rect:
-        """Get the enemy's collision rectangle."""
+        """Get the enemy's collision rectangle.
+        
+        Returns:
+            pygame.Rect: Rectangle representing the enemy's hitbox.
+        """
         return pygame.Rect(int(self.x), int(self.y), self.width, self.height)
     
     def set_gravity(self, direction: int) -> None:
-        """Set the gravity direction for this enemy."""
+        """Set the gravity direction for this enemy.
+        
+        Args:
+            direction: Gravity direction (1 for normal, -1 for inverted).
+        """
         self.gravity_direction = direction
         self.on_ground = False
     
     def apply_gravity(self) -> None:
-        """Apply gravity to vertical velocity."""
+        """Apply gravity to vertical velocity.
+        
+        Updates the enemy's vertical velocity based on gravity direction
+        and clamps it to the maximum fall speed.
+        """
         gravity = self.config.gravity_strength * self.gravity_direction
         self.dy += gravity
         
@@ -105,7 +117,11 @@ class Enemy:
         self._check_collisions(platforms)
     
     def _patrol(self) -> None:
-        """Handle patrol behavior."""
+        """Handle patrol behavior.
+        
+        Reverses the enemy's direction when it reaches the patrol
+        distance from its starting position.
+        """
         distance_from_start = self.x - self.start_x
         
         if distance_from_start >= self.patrol_distance:
@@ -114,7 +130,11 @@ class Enemy:
             self.direction = 1
     
     def _check_collisions(self, platforms: List["Platform"]) -> None:
-        """Check and resolve platform collisions."""
+        """Check and resolve platform collisions.
+        
+        Args:
+            platforms: List of platforms to check for collisions.
+        """
         enemy_rect = self.rect
         self.on_ground = False
         
@@ -138,7 +158,14 @@ class Enemy:
                         self.dy = 0
     
     def get_render_rect(self, camera_x: float = 0) -> pygame.Rect:
-        """Get rectangle adjusted for camera position."""
+        """Get rectangle adjusted for camera position.
+        
+        Args:
+            camera_x: The camera's X offset for scrolling.
+            
+        Returns:
+            pygame.Rect: Rectangle with position adjusted for camera.
+        """
         return pygame.Rect(
             int(self.x - camera_x),
             int(self.y),
@@ -182,11 +209,22 @@ class Hazard:
         
     @property
     def rect(self) -> pygame.Rect:
-        """Get the hazard's collision rectangle."""
+        """Get the hazard's collision rectangle.
+        
+        Returns:
+            pygame.Rect: Rectangle representing the hazard's hitbox.
+        """
         return pygame.Rect(int(self.x), int(self.y), self.width, self.height)
     
     def get_render_rect(self, camera_x: float = 0) -> pygame.Rect:
-        """Get rectangle adjusted for camera position."""
+        """Get rectangle adjusted for camera position.
+        
+        Args:
+            camera_x: The camera's X offset for scrolling.
+            
+        Returns:
+            pygame.Rect: Rectangle with position adjusted for camera.
+        """
         return pygame.Rect(
             int(self.x - camera_x),
             int(self.y),

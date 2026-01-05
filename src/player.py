@@ -61,7 +61,11 @@ class Player:
         
     @property
     def rect(self) -> pygame.Rect:
-        """Get the player's collision rectangle."""
+        """Get the player's collision rectangle.
+        
+        Returns:
+            pygame.Rect: A rectangle representing the player's collision bounds.
+        """
         return pygame.Rect(int(self.x), int(self.y), self.width, self.height)
     
     def move(self, direction: int) -> None:
@@ -94,12 +98,21 @@ class Player:
         return False
     
     def flip_gravity(self) -> None:
-        """Reverse the gravity direction."""
+        """Reverse the gravity direction.
+        
+        Flips between normal (1) and inverted (-1) gravity and resets
+        the on_ground state since the player will be in the air after flipping.
+        """
         self.gravity_direction *= -1
         self.on_ground = False
     
     def apply_gravity(self) -> None:
-        """Apply gravity to vertical velocity."""
+        """Apply gravity to vertical velocity.
+        
+        Adds gravity acceleration to vertical velocity based on the current
+        gravity direction. The fall speed is clamped to prevent excessive
+        velocities.
+        """
         self.dy += self.config.gravity_strength * self.gravity_direction
         
         # Clamp fall speed
@@ -127,7 +140,14 @@ class Player:
         self._check_vertical_collisions(platforms)
     
     def _check_horizontal_collisions(self, platforms: List["Platform"]) -> None:
-        """Check and resolve horizontal collisions with platforms."""
+        """Check and resolve horizontal collisions with platforms.
+        
+        Detects collisions between the player and platforms on the horizontal
+        axis and adjusts the player's position to prevent overlap.
+        
+        Args:
+            platforms: List of platforms to check collisions against.
+        """
         player_rect = self.rect
         
         for platform in platforms:
@@ -138,7 +158,15 @@ class Player:
                     self.x = platform.rect.right
     
     def _check_vertical_collisions(self, platforms: List["Platform"]) -> None:
-        """Check and resolve vertical collisions with platforms."""
+        """Check and resolve vertical collisions with platforms.
+        
+        Detects collisions between the player and platforms on the vertical
+        axis, adjusts the player's position, and updates the on_ground state.
+        Handles both normal and inverted gravity scenarios.
+        
+        Args:
+            platforms: List of platforms to check collisions against.
+        """
         player_rect = self.rect
         self.on_ground = False
         
@@ -194,7 +222,11 @@ class Player:
         return False
     
     def reset(self) -> None:
-        """Reset player to spawn position."""
+        """Reset player to spawn position.
+        
+        Restores the player to their spawn point with default physics state,
+        including zero velocity, normal gravity direction, and not on ground.
+        """
         self.x = self.spawn_x
         self.y = self.spawn_y
         self.dx = 0
@@ -203,6 +235,11 @@ class Player:
         self.on_ground = False
     
     def set_spawn(self, x: float, y: float) -> None:
-        """Set a new spawn point."""
+        """Set a new spawn point.
+        
+        Args:
+            x: The x coordinate for the new spawn point.
+            y: The y coordinate for the new spawn point.
+        """
         self.spawn_x = x
         self.spawn_y = y

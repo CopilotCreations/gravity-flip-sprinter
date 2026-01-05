@@ -16,7 +16,11 @@ class TestLevel:
     """Tests for Level class."""
     
     def test_initialization(self, config):
-        """Test level initialization."""
+        """Test level initialization.
+
+        Args:
+            config: GameConfig fixture providing game configuration.
+        """
         level = Level(config)
         
         assert level.platforms == []
@@ -25,36 +29,64 @@ class TestLevel:
         assert level.camera_x == 0
     
     def test_default_spawn(self, level):
-        """Test default spawn position."""
+        """Test default spawn position.
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         assert level.player_spawn == (100, 300)
     
     def test_default_bounds(self, level):
-        """Test default level bounds."""
+        """Test default level bounds.
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         assert level.level_bounds == (0, 2000, 0, 600)
     
     def test_add_platform(self, level, platform):
-        """Test adding a platform."""
+        """Test adding a platform.
+
+        Args:
+            level: Level fixture providing a level instance.
+            platform: Platform fixture providing a platform instance.
+        """
         level.add_platform(platform)
         
         assert len(level.platforms) == 1
         assert platform in level.platforms
     
     def test_add_enemy(self, level, enemy):
-        """Test adding an enemy."""
+        """Test adding an enemy.
+
+        Args:
+            level: Level fixture providing a level instance.
+            enemy: Enemy fixture providing an enemy instance.
+        """
         level.add_enemy(enemy)
         
         assert len(level.enemies) == 1
         assert enemy in level.enemies
     
     def test_add_hazard(self, level, hazard):
-        """Test adding a hazard."""
+        """Test adding a hazard.
+
+        Args:
+            level: Level fixture providing a level instance.
+            hazard: Hazard fixture providing a hazard instance.
+        """
         level.add_hazard(hazard)
         
         assert len(level.hazards) == 1
         assert hazard in level.hazards
     
     def test_update_camera_follows_player(self, level, config):
-        """Test camera follows player."""
+        """Test camera follows player.
+
+        Args:
+            level: Level fixture providing a level instance.
+            config: GameConfig fixture providing game configuration.
+        """
         level.level_bounds = (0, 3000, 0, config.window_height)
         
         level.update(500)
@@ -63,13 +95,22 @@ class TestLevel:
         assert level.camera_x > 0
     
     def test_update_camera_clamped_left(self, level):
-        """Test camera doesn't go past left bound."""
+        """Test camera doesn't go past left bound.
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         level.update(0)
         
         assert level.camera_x == level.level_bounds[0]
     
     def test_update_camera_clamped_right(self, level, config):
-        """Test camera doesn't go past right bound."""
+        """Test camera doesn't go past right bound.
+
+        Args:
+            level: Level fixture providing a level instance.
+            config: GameConfig fixture providing game configuration.
+        """
         level.level_bounds = (0, 1000, 0, config.window_height)
         
         level.update(2000)
@@ -77,7 +118,12 @@ class TestLevel:
         assert level.camera_x <= level.level_bounds[1] - config.window_width
     
     def test_update_updates_platforms(self, level, moving_platform):
-        """Test update updates moving platforms."""
+        """Test update updates moving platforms.
+
+        Args:
+            level: Level fixture providing a level instance.
+            moving_platform: MovingPlatform fixture providing a moving platform.
+        """
         level.add_platform(moving_platform)
         initial_x = moving_platform.x
         
@@ -86,7 +132,12 @@ class TestLevel:
         assert moving_platform.x != initial_x
     
     def test_update_updates_enemies(self, level, enemy):
-        """Test update updates enemies."""
+        """Test update updates enemies.
+
+        Args:
+            level: Level fixture providing a level instance.
+            enemy: Enemy fixture providing an enemy instance.
+        """
         level.add_enemy(enemy)
         initial_x = enemy.x
         
@@ -96,7 +147,12 @@ class TestLevel:
         assert enemy.x != initial_x or enemy.dy != 0
     
     def test_set_gravity_for_all_enemies(self, level, enemy):
-        """Test setting gravity for all enemies."""
+        """Test setting gravity for all enemies.
+
+        Args:
+            level: Level fixture providing a level instance.
+            enemy: Enemy fixture providing an enemy instance.
+        """
         level.add_enemy(enemy)
         
         level.set_gravity_for_all(-1)
@@ -104,7 +160,12 @@ class TestLevel:
         assert enemy.gravity_direction == -1
     
     def test_set_gravity_for_gravity_platforms(self, level, gravity_platform):
-        """Test setting gravity for gravity platforms."""
+        """Test setting gravity for gravity platforms.
+
+        Args:
+            level: Level fixture providing a level instance.
+            gravity_platform: GravityPlatform fixture providing a gravity platform.
+        """
         level.add_platform(gravity_platform)
         
         level.set_gravity_for_all(-1)
@@ -113,7 +174,11 @@ class TestLevel:
         assert gravity_platform.is_falling is True
     
     def test_reset_camera(self, level):
-        """Test reset resets camera."""
+        """Test reset resets camera.
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         level.camera_x = 500
         
         level.reset()
@@ -121,7 +186,12 @@ class TestLevel:
         assert level.camera_x == 0
     
     def test_reset_gravity_platforms(self, level, gravity_platform):
-        """Test reset resets gravity platforms."""
+        """Test reset resets gravity platforms.
+
+        Args:
+            level: Level fixture providing a level instance.
+            gravity_platform: GravityPlatform fixture providing a gravity platform.
+        """
         level.add_platform(gravity_platform)
         gravity_platform.y = 500
         gravity_platform.is_falling = True
@@ -132,7 +202,11 @@ class TestLevel:
         assert gravity_platform.is_falling is False
     
     def test_player_out_of_bounds_bottom(self, level):
-        """Test player out of bounds detection (bottom)."""
+        """Test player out of bounds detection (bottom).
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         level.level_bounds = (0, 2000, 0, 600)
         
         result = level.is_player_out_of_bounds(100, 700, 48)
@@ -140,7 +214,11 @@ class TestLevel:
         assert result is True
     
     def test_player_out_of_bounds_top(self, level):
-        """Test player out of bounds detection (top)."""
+        """Test player out of bounds detection (top).
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         level.level_bounds = (0, 2000, 0, 600)
         
         result = level.is_player_out_of_bounds(100, -100, 48)
@@ -148,7 +226,11 @@ class TestLevel:
         assert result is True
     
     def test_player_in_bounds(self, level):
-        """Test player in bounds."""
+        """Test player in bounds.
+
+        Args:
+            level: Level fixture providing a level instance.
+        """
         level.level_bounds = (0, 2000, 0, 600)
         
         result = level.is_player_out_of_bounds(100, 300, 48)
@@ -160,7 +242,11 @@ class TestLevelLoader:
     """Tests for LevelLoader class."""
     
     def test_create_demo_level(self, config):
-        """Test demo level creation."""
+        """Test demo level creation.
+
+        Args:
+            config: GameConfig fixture providing game configuration.
+        """
         level = LevelLoader.create_demo_level(config)
         
         assert len(level.platforms) > 0
@@ -169,25 +255,45 @@ class TestLevelLoader:
         assert level.player_spawn != (0, 0)
     
     def test_demo_level_has_ground(self, demo_level):
-        """Test demo level has ground platforms."""
+        """Test demo level has ground platforms.
+
+        Args:
+            demo_level: Level fixture providing a demo level instance.
+        """
         ground_platforms = [p for p in demo_level.platforms if p.y >= 500]
         
         assert len(ground_platforms) > 0
     
     def test_demo_level_has_ceiling(self, demo_level):
-        """Test demo level has ceiling platforms for inverted gravity."""
+        """Test demo level has ceiling platforms for inverted gravity.
+
+        Args:
+            demo_level: Level fixture providing a demo level instance.
+        """
         ceiling_platforms = [p for p in demo_level.platforms if p.y == 0]
         
         assert len(ceiling_platforms) > 0
     
     def test_demo_level_has_moving_platform(self, demo_level):
-        """Test demo level has a moving platform."""
+        """Test demo level has a moving platform.
+
+        Args:
+            demo_level: Level fixture providing a demo level instance.
+        """
         moving_platforms = [p for p in demo_level.platforms if isinstance(p, MovingPlatform)]
         
         assert len(moving_platforms) > 0
     
     def test_save_and_load_json(self, level, platform, enemy, hazard, config):
-        """Test saving and loading level from JSON."""
+        """Test saving and loading level from JSON.
+
+        Args:
+            level: Level fixture providing a level instance.
+            platform: Platform fixture providing a platform instance.
+            enemy: Enemy fixture providing an enemy instance.
+            hazard: Hazard fixture providing a hazard instance.
+            config: GameConfig fixture providing game configuration.
+        """
         level.add_platform(platform)
         level.add_enemy(enemy)
         level.add_hazard(hazard)
@@ -210,7 +316,11 @@ class TestLevelLoader:
             os.unlink(filepath)
     
     def test_load_moving_platform_from_json(self, config):
-        """Test loading moving platform from JSON."""
+        """Test loading moving platform from JSON.
+
+        Args:
+            config: GameConfig fixture providing game configuration.
+        """
         level_data = {
             'bounds': [0, 1000, 0, 600],
             'spawn': [100, 300],
@@ -243,7 +353,11 @@ class TestLevelLoader:
             os.unlink(filepath)
     
     def test_load_gravity_platform_from_json(self, config):
-        """Test loading gravity platform from JSON."""
+        """Test loading gravity platform from JSON.
+
+        Args:
+            config: GameConfig fixture providing game configuration.
+        """
         level_data = {
             'bounds': [0, 1000, 0, 600],
             'spawn': [100, 300],
@@ -271,7 +385,12 @@ class TestLevelLoader:
             os.unlink(filepath)
     
     def test_save_moving_platform_type(self, level, config):
-        """Test saving moving platform preserves type."""
+        """Test saving moving platform preserves type.
+
+        Args:
+            level: Level fixture providing a level instance.
+            config: GameConfig fixture providing game configuration.
+        """
         moving = MovingPlatform(0, 100, 100, 25, end_x=200, end_y=100, speed=2.0, config=config)
         level.add_platform(moving)
         
@@ -291,7 +410,12 @@ class TestLevelLoader:
             os.unlink(filepath)
     
     def test_save_gravity_platform_type(self, level, gravity_platform):
-        """Test saving gravity platform preserves type."""
+        """Test saving gravity platform preserves type.
+
+        Args:
+            level: Level fixture providing a level instance.
+            gravity_platform: GravityPlatform fixture providing a gravity platform.
+        """
         level.add_platform(gravity_platform)
         
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:

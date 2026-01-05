@@ -74,7 +74,14 @@ class InputHandler:
         self._callbacks[action] = callback
     
     def _get_action_for_key(self, key: int) -> Optional[Action]:
-        """Get the action associated with a key."""
+        """Get the action associated with a key.
+
+        Args:
+            key: The pygame key code to look up.
+
+        Returns:
+            The Action associated with the key, or None if no binding exists.
+        """
         for action, binding in self.bindings.items():
             if key == binding.primary or key == binding.secondary:
                 return action
@@ -108,15 +115,36 @@ class InputHandler:
                     self._released_this_frame.add(action)
     
     def is_action_held(self, action: Action) -> bool:
-        """Check if an action key is currently held."""
+        """Check if an action key is currently held.
+
+        Args:
+            action: The action to check.
+
+        Returns:
+            True if the action key is currently held down.
+        """
         return action in self.held_actions
     
     def is_action_pressed(self, action: Action) -> bool:
-        """Check if an action was just pressed this frame."""
+        """Check if an action was just pressed this frame.
+
+        Args:
+            action: The action to check.
+
+        Returns:
+            True if the action was pressed during this frame.
+        """
         return action in self._pressed_this_frame
     
     def is_action_released(self, action: Action) -> bool:
-        """Check if an action was just released this frame."""
+        """Check if an action was just released this frame.
+
+        Args:
+            action: The action to check.
+
+        Returns:
+            True if the action was released during this frame.
+        """
         return action in self._released_this_frame
     
     def get_movement_direction(self) -> int:
@@ -134,31 +162,58 @@ class InputHandler:
         return direction
     
     def should_jump(self) -> bool:
-        """Check if jump action was just pressed."""
+        """Check if jump action was just pressed.
+
+        Returns:
+            True if the jump action was pressed this frame.
+        """
         return self.is_action_pressed(Action.JUMP)
     
     def should_flip_gravity(self) -> bool:
-        """Check if gravity flip action was just pressed."""
+        """Check if gravity flip action was just pressed.
+
+        Returns:
+            True if the gravity flip action was pressed this frame.
+        """
         return self.is_action_pressed(Action.FLIP_GRAVITY)
     
     def should_pause(self) -> bool:
-        """Check if pause action was just pressed."""
+        """Check if pause action was just pressed.
+
+        Returns:
+            True if the pause action was pressed this frame.
+        """
         return self.is_action_pressed(Action.PAUSE)
     
     def should_restart(self) -> bool:
-        """Check if restart action was just pressed."""
+        """Check if restart action was just pressed.
+
+        Returns:
+            True if the restart action was pressed this frame.
+        """
         return self.is_action_pressed(Action.RESTART)
     
     def should_quit(self) -> bool:
-        """Check if quit action was just pressed."""
+        """Check if quit action was just pressed.
+
+        Returns:
+            True if the quit action was pressed this frame.
+        """
         return self.is_action_pressed(Action.QUIT)
     
     def should_toggle_debug(self) -> bool:
-        """Check if debug toggle was just pressed."""
+        """Check if debug toggle was just pressed.
+
+        Returns:
+            True if the debug toggle action was pressed this frame.
+        """
         return self.is_action_pressed(Action.DEBUG_TOGGLE)
     
     def reset(self) -> None:
-        """Reset all input state."""
+        """Reset all input state.
+
+        Clears all held actions and frame-specific pressed/released states.
+        """
         self.held_actions.clear()
         self._pressed_this_frame.clear()
         self._released_this_frame.clear()

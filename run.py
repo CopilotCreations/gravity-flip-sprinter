@@ -18,7 +18,18 @@ from src.game import Game
 
 
 def parse_args():
-    """Parse command line arguments."""
+    """Parse command line arguments for the Gravity Flip Runner game.
+
+    Returns:
+        argparse.Namespace: Parsed command line arguments containing:
+            - width (int): Window width in pixels.
+            - height (int): Window height in pixels.
+            - fps (int): Target frames per second.
+            - speed (float): Player movement speed.
+            - gravity (float): Gravity strength.
+            - jump (float): Jump force.
+            - debug (bool): Whether debug mode is enabled.
+    """
     parser = argparse.ArgumentParser(
         description="Gravity Flip Runner - A 2D side-scrolling platformer with gravity mechanics"
     )
@@ -75,7 +86,11 @@ def parse_args():
 
 
 def main():
-    """Main entry point for the game."""
+    """Main entry point for the Gravity Flip Runner game.
+
+    Parses command line arguments, creates a game configuration,
+    initializes the game instance, and starts the game loop.
+    """
     args = parse_args()
     
     # Create configuration from command line args
